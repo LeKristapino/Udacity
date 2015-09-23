@@ -1,4 +1,4 @@
-#class for generating movie instances
+# class for generating movie instances
 class Movie():
     def __init__(self, title, release, poster_url, trailer_url):
         self.title = title
