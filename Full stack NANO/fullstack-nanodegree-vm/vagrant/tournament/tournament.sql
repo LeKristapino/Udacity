@@ -1,29 +1,33 @@
 -- Table definitions for the tournament project.
---
 
+-- setting up and connection to the database
+DROP DATABASE IF EXISTS tournament;
+CREATE DATABASE "tournament";
+\c tournament
 --table for players
-create table players(
-	id serial primary key,
-	name varchar(100)
+CREATE TABLE players(
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(100)
 );
 --table for matches
-create table matches(
-	winner_id int references players(id),
-	loser_id int references players(id),
+CREATE TABLE matches(
+	id SERIAL PRIMARY KEY,
+	winner_id INT REFERENCES players(id),
+	loser_id INT REFERENCES players(id)
 );
 
 --view wih player id, name and wins
-create view player_wins as
-	SELECT p.id, p.name, count(m.winner_id) as wins
-	FROM players as p
-	LEFT JOIN matches as m
+CREATE VIEW player_wins AS
+	SELECT p.id, p.name, COUNT(m.winner_id) AS wins
+	FROM players AS p
+	LEFT JOIN matches AS m
 	ON p.id = m.winner_id
-	group by p.id;
+	GROUP BY p.id;
+	
 --view wih player id, name and wins and total matches played
-create view total_match_count as
-	select p.id, count(m) as total_matches
-	from players as p join matches as m
-	on p.id = m.winner_id or p.id = m.loser_id
-	group by p.id;
-
+CREATE VIEW total_match_count AS
+	SELECT p.id, COUNT(m) AS total_matches
+	FROM players AS p JOIN matches AS m
+	ON p.id = m.winner_id OR p.id = m.loser_id
+	GROUP BY p.id;
 

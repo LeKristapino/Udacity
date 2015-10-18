@@ -1,6 +1,9 @@
 To Run the Application:
 	1. download zip file
 	2.unzip the file
+	3. open your terminal/console in the project directory
+	4. run command “psql”
+	5. when in the postgres terminal, run command “\i tournament.sql” to load in the database and necessary tables
 	3.open file “tournament_test.py” in IDLE and run it
 
 
