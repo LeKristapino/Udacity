@@ -7,7 +7,7 @@ CREATE DATABASE "tournament";
 --table for players
 CREATE TABLE players(
 	id SERIAL PRIMARY KEY,
-	name VARCHAR(100)
+	name VARCHAR
 );
 --table for matches
 CREATE TABLE matches(
@@ -17,8 +17,8 @@ CREATE TABLE matches(
 );
 
 --view wih player id, name and wins
-CREATE VIEW player_wins AS
-	SELECT p.id, p.name, COUNT(m.winner_id) AS wins
+CREATE VIEW player_rank AS
+	SELECT p.id, p.name, row_number() OVER (order by COUNT(m.winner_id) DESC) AS rank
 	FROM players AS p
 	LEFT JOIN matches AS m
 	ON p.id = m.winner_id

@@ -112,10 +112,10 @@ def swissPairings():
     """
     DB, c = connect()
     c.execute(""" SELECT p.id, p.name, p2.id, p2.name
-                        FROM player_wins as p
-                        JOIN player_wins as p2
-                        ON p.wins = p2.wins
-                        WHERE p.id > p2.id; 
+                        FROM player_rank as p
+                        JOIN player_rank as p2
+                        ON p.rank +1 = p2.rank
+                        WHERE p.rank % 2 =1 ; 
                     """)
     pairings = c.fetchall()
     DB.close()
