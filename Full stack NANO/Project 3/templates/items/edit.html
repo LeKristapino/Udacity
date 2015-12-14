@@ -1,0 +1,28 @@
+{% extends "layouts/layout.html" %}
+{% block body %}
+
+<h1>Edit {{item.name}}</h1>
+<form method="POST" action="" enctype="multipart/form-data">
+    <div class="field">
+        <label for="name">Name</label>
+        <input name="name" type="text" value="{{item.name}}">
+    </div>
+    <div class="field">
+        <label for="description">Description</label>
+        <textarea name="description">{{item.description}}</textarea>
+    </div>
+    <div class="field">
+        <label for="category">Category</label>
+        <select name="category">
+            {% for c in categories %}
+            <option value="{{c.id}}" {{"selected" if c.id == item.category.id else ""}}>{{c.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field">
+        <input type="file" name="image">
+    </div>
+    <button type="submit" class="btn submit">Save</button>
+</form>
+<a href="{{url_for('ShowItem', category_name=item.category.name, item_name=item.name)}}">Cancel</a>
+{% endblock %}

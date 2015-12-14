@@ -1,0 +1,12 @@
+{% extends "layouts/layout.html" %}
+{% block title %} New Category {% endblock %}
+{% block body %}
+<h1> New Category</h1>
+<form method="POST" action="">
+    <div class="field">
+    <label for="name">Name:</label>
+    <input name="name" type="text">
+        </div>
+    <button type="submit" class="btn submit">Submit</button>
+</form>
+{% endblock %}

@@ -1,0 +1,15 @@
+<ul>
+    {% for category in categories %}
+    <li>
+        <a href="{{url_for('ShowCategory', category_name=category.name)}}">
+            <div class="name">
+                {{ category.name}}
+            </div>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% if session['username'] %}
+<a class="btn new" href="{{url_for('NewCategory')}}"> New Category</a>
+<a class="btn new" href="{{url_for('NewItem')}}"> New Item</a>
+{% endif %}

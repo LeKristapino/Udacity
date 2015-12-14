@@ -1,0 +1,12 @@
+{% extends "layouts/layout.html" %}
+{% block title %} Catalog App: Latest items {% endblock %}
+{% block body %}
+<h1 class="pageTitle">Latest Items</h1>
+<ul class="itemsList">
+{% for item in items %}
+    <li>
+        <div class="itemName"><a href="{{url_for('ShowItem', item_name=item.name, category_name=item.category.name)}}">{{item.name}}</a></div><div class="itemCategory">({{item.category.name}})</div>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

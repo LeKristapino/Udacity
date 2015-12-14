@@ -1,0 +1,12 @@
+{% extends "layouts/layout.html" %}
+{% block body %}
+<h1>Edit category - {{category.name}}</h1>
+<form method="POST" action="">
+    <div class="field">
+    <label for="name">Name:</label>
+        <input name="name" type="text" value="{{category.name}}">
+    </div>
+    <button type="submit" class="btn submit">Save</button>
+</form>
+<a href="{{url_for('ShowCategory', category_name=category.name)}}">Cancel</a>
+{% endblock %}

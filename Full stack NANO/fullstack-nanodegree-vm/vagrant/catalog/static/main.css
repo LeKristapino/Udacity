@@ -1,0 +1,124 @@
+html, body{
+    margin: 0;
+    background-color: #f5f6f7;
+}
+a{
+    text-decoration: none;
+    color: orange;}
+.innerContainer{
+    padding: 20px 0;
+    width: 100%;
+}
+.mainContainer {
+    margin: 5% 15%;
+    display: flex; /* or inline-flex */
+    min-height: 500px;
+    background-color: #ffffff;
+    border: 1px solid black;
+    border-radius: 20px;
+
+}
+.navbar {
+    width: 100%;
+    height:80px;
+    background-color: #ffc014;
+}
+.innerNavbar{
+    margin: 0 15%;
+    padding: 20px 0;
+    height: 40px;
+}
+.title{
+    display: inline-block;
+    }
+.btn{
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+.btn.submit,
+.btn.danger{
+    border: 1px solid gray;
+    background-color: #ffffff;
+    margin-top: 20px;
+    }
+.btn.submit:hover{
+    background-color: darkgray;
+    cursor: pointer;
+    }
+.btn.danger:hover{
+background-color: red;
+    cursor: pointer;
+}
+
+.btn.login{
+    border: 1px solid #ffffff;
+    float: right;
+    color: #ffffff;
+    margin-right: 15px;
+    display: inline-block;
+}
+.btn.login:hover{
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    color: #000000;
+    cursor: pointer;
+}
+
+.categories{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-left:50px;
+    margin-right: 50px;
+    width: 350px;
+    border-right: 1px solid red;
+}
+.categories ul{
+    list-style: none;
+    padding: 0;
+    margin-right: 15px;
+}
+.categories li{
+    height: 30px;
+}
+.categories .name{
+    padding: 6px 10px;
+}
+.categories .name:hover{
+    background-color: darkgray;
+}
+
+ul.itemsList{
+    list-style: none;
+}
+.itemsList li{
+    height: 30px;
+    padding: 0 6px;
+}
+.itemsList li .itemName,
+.itemsList li .itemCategory{
+    display:inline-block;
+}
+.itemsList .itemCategory{
+    color: darkgray;
+    font-style: italic;
+}
+
+.field{
+display: block;
+margin: 10px 10px;
+}
+textarea{
+width: 625px;
+height: 100px;}
+
+.links{margin: 20px 0;}
+
+.itemTitle{
+display: inline-block;}
+.itemImage{
+height: 100px;
+width: 100px;
+display: inline-block;}

@@ -1,0 +1,19 @@
+{% extends "layouts/layout.html" %}
+{% block title %} Category: {{category.name}} {% endblock %}
+{% block body %}
+<h2> {{category.name}} items</h2>
+<table>
+    {% for item in items %}
+    <tr>
+        <td>
+            <a href="{{url_for('ShowItem', category_name=category.name, item_name=item.name)}}">{{ item.name}}</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="links">
+    <a href='/'>Back</a> |
+    <a href="{{url_for('EditCategory', category_name=category.name)}}">Edit category</a> |
+    <a href="{{url_for('DeleteCategory', category_name=category.name)}}">Delete Category</a>
+</div>
+{% endblock %}

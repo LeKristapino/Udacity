@@ -1,0 +1,35 @@
+{% extends "layouts/layout.html" %}
+{% block title %} New Item {% endblock %}
+{% block body %}
+    {% if not categories %}
+        <h2> You must add a category first</h2>
+        <form method="POST" action="{{url_for('NewCategory')}}">
+            <input name="name" type="text">
+            <button type="submit">Submit</button>
+    </form>
+    {% else %}
+    <h1>New Item</h1>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <div class="field">
+            <label for="name">Name</label>
+            <input name="name" type="text">
+                </div>
+            <div class="field">
+            <label for="description">Description</label>
+            <textarea name="description"></textarea>
+                </div>
+                <div class="field">
+            <label for="category">Category</label>
+            <select name="category">
+                {% for c in categories %}
+                <option value="{{c.name}}">{{c.name}}</option>
+                {% endfor %}
+            </select>
+                    </div>
+            <div class="field">
+            <input type=file name=image>
+                </div>
+            <button type="submit" class="btn submit">Save Item</button>
+        </form>
+    {% endif %}
+{% endblock %}
