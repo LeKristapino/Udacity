@@ -11,6 +11,7 @@ import httplib2
 import json
 from flask import make_response
 import requests
+from dicttoxml import dicttoxml
 
 #TODO JSON and XML implementation
 #TODO styling
@@ -45,7 +46,8 @@ def logged_in():
 #Clean up method when deleting a category
 def delete_items(items):
     for item in items:
-        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image))
+        if item.image:
+         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image))
         session.delete(item)
         session.commit()
 
@@ -183,6 +185,13 @@ def CategoriesInJSON():
     categories = session.query(Category).all()
     return jsonify(Categories=[i.serialize for i in categories])
 
+@app.route('/categories.xml')
+def CategoriesInXML():
+    categories = session.query(Category).all()
+    object = [i.serialize for i in categories]
+    xml = dicttoxml(object)
+    print xml
+    return xml
 # Show for categories
 @app.route('/category/<string:category_name>/')
 def ShowCategory(category_name):
@@ -195,10 +204,12 @@ def ShowCategory(category_name):
 def NewCategory():
     if logged_in():
         if request.method == 'POST' and request.form["name"]!= "":
-            category = Category(name=request.form["name"])
-            session.add(category)
-            session.commit()
-            return redirect(url_for('LatestItems'))
+            existing_name = session.query(Category).filter_by(name=request.form["name"]).first()
+            if not existing_name:
+                category = Category(name=request.form["name"])
+                session.add(category)
+                session.commit()
+                return redirect(url_for('LatestItems'))
         else:
             return render_template("categories/new.html")
     return redirect(url_for('login'))
@@ -212,13 +223,13 @@ def EditCategory(category_name):
             return render_template("categories/edit.html", category=category)
         else:
             category = session.query(Category).filter_by(name=category_name).one()
-            if request.form["name"] != category.name:
+            existing_name = session.query(Category).filter_by(name=request.form["name"]).first()
+            if request.form["name"] != category.name and not existing_name:
                 category.name = request.form["name"]
                 session.add(category)
                 session.commit()
             return redirect(url_for('ShowCategory', category_name=category.name))
     return redirect(url_for('login'))
-
 
 
 # delete category
@@ -262,20 +273,22 @@ def EditItem(category_name, item_name):
         else:
             category = session.query(Category).filter_by(name=category_name).one()
             item = session.query(Item).filter_by(category_id=category.id, name=item_name).one()
-            item.name = request.form["name"]
-            item.description = request.form["description"]
-            image = request.files["image"]
-            new_category = session.query(Category).filter_by(id=int(request.form["category"])).one()
-            item.category_id = new_category.id
-            #Update image if a new one is provided
-            if image and image.filename != item.image and allowed_file(image.filename):
-                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image))
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                item.image = filename
-            session.add(item)
-            session.commit()
-            return redirect(url_for('ShowItem', category_name=new_category.name, item_name=item.name))
+            existing_name = session.query(Item).filter_by(category_id=category.id, name=request.form["name"]).first()
+            if not existing_name or item != existing_name:
+                item.name = request.form["name"]
+                item.description = request.form["description"]
+                image = request.files["image"]
+                new_category = session.query(Category).filter_by(id=int(request.form["category"])).one()
+                item.category_id = new_category.id
+                #Update image if a new one is provided
+                if image and image.filename != item.image and allowed_file(image.filename):
+                    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image))
+                    filename = secure_filename(image.filename)
+                    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    item.image = filename
+                session.add(item)
+                session.commit()
+                return redirect(url_for('ShowItem', category_name=new_category.name, item_name=item.name))
     return redirect(url_for('login'))
 
 # New category item
@@ -285,17 +298,19 @@ def NewItem():
         if request.method == 'POST' and request.form["name"]!= "":
             category_name = request.form['category']
             category = session.query(Category).filter_by(name=category_name).one()
-            item = Item(category_id=category.id, name=request.form["name"], description=request.form["description"])
-            session.add(item)
-            session.commit()
-            image = request.files["image"]
-            if image and allowed_file(image.filename):
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                item.image = filename
+            existing_name = session.query(Item).filter_by(category_id=category.id, name=request.form["name"]).first()
+            if not existing_name:
+                item = Item(category_id=category.id, name=request.form["name"], description=request.form["description"])
                 session.add(item)
                 session.commit()
-            return redirect(url_for('ShowCategory', category_name=category_name))
+                image = request.files["image"]
+                if image and allowed_file(image.filename):
+                    filename = secure_filename(image.filename)
+                    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    item.image = filename
+                    session.add(item)
+                    session.commit()
+                return redirect(url_for('ShowCategory', category_name=category_name))
         else:
             categories = session.query(Category).all()
 
@@ -310,7 +325,8 @@ def DeleteItem(category_name, item_name):
         category = session.query(Category).filter_by(name=category_name).one()
         item = session.query(Item).filter_by(category_id=category.id, name=item_name).one()
         if request.method == 'POST':
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image))
+            if item.image:
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image))
             session.delete(item)
             session.commit()
             return redirect(url_for('ShowCategory', category_name=category_name))
